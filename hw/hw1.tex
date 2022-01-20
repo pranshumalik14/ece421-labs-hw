@@ -86,7 +86,7 @@
         c) From the above two proofs, since a misclassification always 
         results in $y_n\vec{w}^\intercal \vec{x}_n < 0$ and by the same 
         logic a correct classification yields $y_n\vec{w}^\intercal \vec{x}_n
-        > 0$ for some $(\vec{x}_n, y_n) \in \mathcal{D}$, the update step 
+        > 0$ for any $(\vec{x}_n, y_n) \in \mathcal{D}$, the update step 
         always has net addition towards making the product positive for a 
         misclassified point. This can also be viewed geometrically, where
         $\vec{w}$, being the normal vector to the decision boundary (a 
@@ -97,18 +97,20 @@
         \vec{x}_n$ aligns more closely with $\vec{x}_n$. In the other case 
         where $y_n = -1 = -\hat{y}_n$, we have an acute angle between the two
         vectors, and the updated weight $\vec{w}^{\prime} =
-        \vec{w} - \vec{x}_n$ aligns less with $\vec{x}_n$. In both cases, th
+        \vec{w} - \vec{x}_n$ aligns less with $\vec{x}_n$. In both cases, the
         update magnitude is proportional to the norm of the datavector and 
         is made in the correct direction, though it may result in
         misclassification of other datavectors or not completely 
-        resolve the current error in one go.
+        resolve the current error in one go. But since there is no selection
+        criteria or position constraint for a misclassified datavector, the
+        algorithm will continue to explore freely in each update.
     \end{proof}
 
     Thus, with the above reasoning, we can conclude that we will have a
     definite and correct termination of the perceptron algorithm for a 
     linearly separable dataset, since we will eventually come across an
     update step that resolves the only remaining misclassification when the
-    decision boundary aligns itself in the label-separation region. Note that
+    decision boundary places itself in the label-separation region. Note that
     this algorithm will not terminate for non-linearly separable datasets.
     
     \vspace{0.5cm}
