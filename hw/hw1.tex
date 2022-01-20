@@ -39,20 +39,20 @@
 \renewcommand{\vec}[1]{\mathbf{#1}}
 
 \begin{document}
-	\setheader{ECE421: Introduction to Machine Learning}{Homework Assignment 1}{30 January, 2022}{Pranshu Malik}{1004138916}
+    \setheader{ECE421: Introduction to Machine Learning}{Homework Assignment 1}{30 January, 2022}{Pranshu Malik}{1004138916}
+
+    \textbf{Solution 1: Perceptron Learning Algorithm}
 	
-	\textbf{Solution 1: Perceptron Learning Algorithm}
-	
-	Given a dataset $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where 
-    $\vec{x}_i\in\R^{d+1}$ is an augmented vector 
-    $\mat{1 & x_{i,1} & \ldots & x_{i, d}}^\intercal$ and $y_i\in\{-1,1\}$, 
-    the perceptron learning algorithm is a linear classifier that can be 
-    written as
+    Given a dataset $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where 
+    $\vec{x}_i\in\R^{d+1}$ is an augmented datavector 
+    $\mat{1 & x_{i,1} & \ldots & x_{i, d}}^\intercal$ with label $y_i \in 
+    \{-1,1\}$, the perceptron learning algorithm performs linear 
+    classification that can be written as
     \begin{equation}
        \hat{y}_n = h(\vec{x}_n) = \text{sign}(\vec{w}^\intercal\vec{x}_n),
     \end{equation}
 
-    where the model parameter $\vec{w} \in \R^{d+1}$ is a weight vector. The
+    where the model parameter $\vec{w} \in \R^{d+1}$ is a weightvector. The
     weight update rule (for an incorrectly classified training point) is
     \begin{equation}
         \label{eqn:update_wgt}
@@ -60,7 +60,7 @@
     \end{equation}
 
     \begin{proof}[\unskip\nopunct]
-        a) For a misclassified training point, the data and
+        a) For a misclassified training point, let the data and
         weight vectors have 
         $\text{sign}(\vec{w}^\intercal\vec{x}_n) = \hat{y}_n$, for
         which we necessarily have $\hat{y}_n = -y_n \neq y_n$, and thus 
@@ -87,12 +87,12 @@
         results in $y_n\vec{w}^\intercal \vec{x}_n < 0$ and by the same 
         logic a correct classification yields $y_n\vec{w}^\intercal \vec{x}_n
         > 0$ for any $(\vec{x}_n, y_n) \in \mathcal{D}$, the update step 
-        always has net addition towards making the product positive for a 
-        misclassified point. This can also be viewed geometrically, where
-        $\vec{w}$, being the normal vector to the decision boundary (a 
+        always has net addition towards making the inner product positive for 
+        a misclassified point. This can also be viewed geometrically, where
+        the weightvector $\vec{w}$, being normal to the decision boundary (a 
         hyperplane), changes its alignment to the misclassified datavector 
         $\vec{x}_n$. In the case where $y_n = 1 = -\hat{y}_n$, we have an 
-        obtuse angle between the normal vector and the datavector (since $\vec
+        obtuse angle between the  weight and data vectors (since $\vec
         {w}^\intercal \vec{x}_n < 0$), for which $\vec{w} ^{\prime} = \vec{w}+
         \vec{x}_n$ aligns more closely with $\vec{x}_n$. In the other case 
         where $y_n = -1 = -\hat{y}_n$, we have an acute angle between the two
