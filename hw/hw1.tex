@@ -1,17 +1,19 @@
-\documentclass[letter]{article}
+\documentclass{article}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{fancyhdr}
 
 % set up margins
-\oddsidemargin=.2in
-\evensidemargin=.2in
+\oddsidemargin=0.2in
+\evensidemargin=0.2in
 \textwidth=6in
 \topmargin=0in
 \textheight=9.0in
 \parskip=.07in
 \parindent=0in
+\headheight=23pt
 \pagestyle{fancy}
 
 % set up header
@@ -34,13 +36,86 @@
 \newcommand{\Null}{\mathrm{null}}
 \newcommand{\Rank}{\mathrm{rank}}
 \newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
-
+\renewcommand{\vec}[1]{\mathbf{#1}}
 
 \begin{document}
 	\setheader{ECE421: Introduction to Machine Learning}{Homework Assignment 1}{30 January, 2022}{Pranshu Malik}{1004138916}
 	
 	\textbf{Solution 1: Perceptron Learning Algorithm}
 	
-	Hello there!
+	Given a dataset $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where 
+    $\vec{x}_i\in\R^{d+1}$ is an augmented vector 
+    $\mat{1 & x_{i,1} & \ldots & x_{i, d}}^\intercal$ and $y_i\in\{-1,1\}$, 
+    the perceptron learning algorithm is a linear classifier that can be 
+    written as
+    \begin{equation}
+       \hat{y}_n = h(\vec{x}_n) = \text{sign}(\vec{w}^\intercal\vec{x}_n),
+    \end{equation}
+
+    where the model parameter $\vec{w} \in \R^{d+1}$ is a weight vector. The
+    weight update rule (for an incorrectly classified training point) is
+    \begin{equation}
+        \label{eqn:update_wgt}
+        \vec{w}^\prime = \vec{w} + y_i\vec{x}_i.
+    \end{equation}
+
+    \begin{proof}[\unskip\nopunct]
+        a) For a misclassified training point, the data and
+        weight vectors have 
+        $\text{sign}(\vec{w}^\intercal\vec{x}_n) = \hat{y}_n$, for
+        which we necessarily have $\hat{y}_n = -y_n \neq y_n$, and thus 
+        $y_n\hat{y}_n = -1$. Therefore, in general, without the $\text{sign}
+        (\cdot)$ function that strips the magnitude of the dot product, 
+        we will have $y_n\vec{w}^\intercal\vec{x}_n < 0$.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        b) From the weight update step in equation \ref{eqn:update_wgt}, we 
+        have 
+        \[
+            y_n\vec{w}^{\prime\intercal}\vec{x}_n = y_n(\vec{w}^\intercal + 
+            y_i\vec{x}_n^\intercal)\vec{x}_n = y_n\vec{w}^\intercal\vec{x} + 
+            y_n^2||\vec{x}_n||^2. 
+        \]
+        Since $y_n^2||\vec{x}_n||^2 > 0$, we always have
+        $y_n\vec{w}^{\prime\intercal}\vec{x}_n > 
+        y_n\vec{w}^{\intercal}\vec{x}_n$.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        c) From the above two proofs, since a misclassification always 
+        results in $y_n\vec{w}^\intercal \vec{x}_n < 0$ and by the same 
+        logic a correct classification yields $y_n\vec{w}^\intercal \vec{x}_n
+        > 0$ for some $(\vec{x}_n, y_n) \in \mathcal{D}$, the update step 
+        always has net addition towards making the product positive for a 
+        misclassified point. This can also be viewed geometrically, where
+        $\vec{w}$, being the normal vector to the decision boundary (a 
+        hyperplane), changes its alignment to the misclassified datavector 
+        $\vec{x}_n$. In the case where $y_n = 1 = -\hat{y}_n$, we have an 
+        obtuse angle between the normal vector and the datavector (since $\vec
+        {w}^\intercal \vec{x}_n < 0$), for which $\vec{w} ^{\prime} = \vec{w}+
+        \vec{x}_n$ aligns more closely with $\vec{x}_n$. In the other case 
+        where $y_n = -1 = -\hat{y}_n$, we have an acute angle between the two
+        vectors, and the updated weight $\vec{w}^{\prime} =
+        \vec{w} - \vec{x}_n$ aligns less with $\vec{x}_n$. In both cases, th
+        update magnitude is proportional to the norm of the datavector and 
+        is made in the correct direction, though it may result in
+        misclassification of other datavectors or not completely 
+        resolve the current error in one go.
+    \end{proof}
+
+    Thus, with the above reasoning, we can conclude that we will have a
+    definite and correct termination of the perceptron algorithm for a 
+    linearly separable dataset, since we will eventually come across an
+    update step that resolves the only remaining misclassification when the
+    decision boundary aligns itself in the label-separation region. Note that
+    this algorithm will not terminate for non-linearly separable datasets.
+    
+    \vspace{0.5cm}
+
+    \textbf{Solution 2: Linear Regression}
+
+    Given the same dataset $\mathcal{D}$ as above, we can write the linear 
+    regression model as
 
 \end{document}
