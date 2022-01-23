@@ -4,6 +4,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{fancyhdr}
+\usepackage{hyperref}
 
 % set up margins
 \oddsidemargin=0.2in
@@ -49,20 +50,21 @@
     \{-1,1\}$, the perceptron learning algorithm performs linear 
     classification that can be written as
     \begin{equation}
-       \hat{y}_n = h(\vec{x}_n) = \text{sign}(\vec{w}^\intercal\vec{x}_n),
+       \hat{y}_i = h(\vec{x}_i) = \text{sign}(\vec{w}^\intercal\vec{x}_i),
     \end{equation}
 
-    where the model parameter $\vec{w} \in \R^{d+1}$ is a weightvector. The
-    weight update rule (for an incorrectly classified training point) is
+    where the model parameter $\vec{w} \in \R^{d+1}$ is a weightvector and
+    $\hat{y}_n$ is the predicted label. Given 
+    an incorrectly classified training point $(\vec{x}_n,y_n)\in\mathcal{D}$, 
+    the weight update rule is
     \begin{equation}
         \label{eqn:update_wgt}
-        \vec{w}^\prime = \vec{w} + y_i\vec{x}_i.
+        \vec{w}^\prime = \vec{w} + y_n\vec{x}_n.
     \end{equation}
 
     \begin{proof}[\unskip\nopunct]
-        a) For a misclassified training point, let the data and
-        weight vectors have 
-        $\text{sign}(\vec{w}^\intercal\vec{x}_n) = \hat{y}_n$, for
+        a) For a misclassified training point,
+        let $\text{sign}(\vec{w}^\intercal\vec{x}_n) = \hat{y}_n$, for
         which we necessarily have $\hat{y}_n = -y_n \neq y_n$, and thus 
         $y_n\hat{y}_n = -1$. Therefore, in general, without the $\text{sign}
         (\cdot)$ function that strips the magnitude of the dot product, 
@@ -74,7 +76,7 @@
         have 
         \[
             y_n\vec{w}^{\prime\intercal}\vec{x}_n = y_n(\vec{w}^\intercal + 
-            y_i\vec{x}_n^\intercal)\vec{x}_n = y_n\vec{w}^\intercal\vec{x} + 
+            y_i\vec{x}_n^\intercal)\vec{x}_n = y_n\vec{w}^\intercal\vec{x}_n+ 
             y_n^2||\vec{x}_n||^2. 
         \]
         Since $y_n^2||\vec{x}_n||^2 > 0$, we always have
@@ -83,12 +85,13 @@
     \end{proof}
 
     \begin{proof}[\unskip\nopunct]
-        c) From the above two proofs, since a misclassification always 
-        results in $y_n\vec{w}^\intercal \vec{x}_n < 0$ and by the same 
-        logic a correct classification yields $y_n\vec{w}^\intercal \vec{x}_n
-        > 0$ for any $(\vec{x}_n, y_n) \in \mathcal{D}$, the update step 
-        always has net addition towards making the inner product positive for 
-        a misclassified point. This can also be viewed geometrically, where
+        c) From the above two proofs, notice that a misclassification always 
+        results in $y_n\vec{w}^\intercal \vec{x}_n < 0$, whereas 
+        a correct classification yields $y_n\vec{w}^\intercal \vec{x}_n
+        > 0$. Therefore, it can be seen that the update step introduces a net
+        addition towards making the inner product positive (hence a correct 
+        classification) for a misclassified point. 
+        This can also be viewed geometrically, where
         the weightvector $\vec{w}$, being normal to the decision boundary (a 
         hyperplane), changes its alignment to the misclassified datavector 
         $\vec{x}_n$. In the case where $y_n = 1 = -\hat{y}_n$, we have an 
@@ -99,11 +102,11 @@
         vectors, and the updated weight $\vec{w}^{\prime} =
         \vec{w} - \vec{x}_n$ aligns less with $\vec{x}_n$. In both cases, the
         update magnitude is proportional to the norm of the datavector and 
-        is made in the correct direction, though it may result in
-        misclassification of other datavectors or not completely 
-        resolve the current error in one go. But since there is no selection
-        criteria or position constraint for a misclassified datavector, the
-        algorithm will continue to explore freely in each update.
+        is made in the correct direction, though it may misclassify other 
+        datavectors or not completely resolve the current error in one go.
+        But since there is no selection preference or position constraint for 
+        a misclassified datavector, the algorithm will continue to explore 
+        freely in each update.
     \end{proof}
 
     Thus, with the above reasoning, we can conclude that we will have a
@@ -111,13 +114,66 @@
     linearly separable dataset, since we will eventually come across an
     update step that resolves the only remaining misclassification when the
     decision boundary places itself in the label-separation region. Note that
-    this algorithm will not terminate for non-linearly separable datasets.
+    this algorithm does not produce unique (or deterministic) results and 
+    will not terminate for non-linearly separable datasets.
     
     \vspace{0.5cm}
 
     \textbf{Solution 2: Linear Regression}
 
-    Given the same dataset $\mathcal{D}$ as above, we can write the linear 
-    regression model as
+    Given a dataset $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where 
+    $\vec{x}_i\in\R^{d+1}$ is an augmented datavector 
+    $\mat{1 & x_{i,1} & \ldots & x_{i, d}}^\intercal$ with the corresponding 
+    output $y_i \in \R$, the linear regression model can be written as
+    \begin{equation}
+       \hat{y}_i = h(\vec{x}_i) = \vec{w}^\intercal\vec{x}_i,
+    \end{equation}
+    where the model parameter $\vec{w} \in \R^{d+1}$ is a weightvector that
+    is associated with the in-sample error, or the loss function 
+    \begin{equation}
+        \label{eqn:loss_fun_regression}
+        E_{\text{in}}(\vec{w}) = \frac{1}{N}\sum_{i=1}^N (y_i - \hat{y}_i)^2 
+        = \frac{1}{N}||\vec{y}-\hat{\vec{y}}||^2.
+    \end{equation}
+
+    In equation \ref{eqn:loss_fun_regression}, the vectors $\vec{y} = 
+    \mat{y_1 & \ldots & y_N}^\intercal$ and $\hat{\vec{y}} = \mat{\hat{y}_1 & 
+    \ldots & \hat{y}_N}$ are the true and predicted outputs over the training 
+    dataset, respectively. Note that we can write $\hat{\vec{y}} = \vec{X}
+    \vec{w}$, for $\vec{X}=\mat{\vec{x}_1^\intercal & \ldots & \vec{x}_N^
+    \intercal} ^\intercal \in \R^{N \times d+1}$ since the inner product is 
+    commutative, i.e. $\vec{w}^\intercal \vec{x} = \vec{x}^\intercal \vec{w}$.
+
+    \begin{proof}[\unskip\nopunct]
+        a) In general, the squared norm for a vector is given by the inner 
+        product with itself. Therefore, we can write
+        $\frac{1}{N}||\vec{y}-\vec{X}\vec{w}||^2 = \frac{1}{N}(\vec{y}-\vec{X}
+        \vec{w})^\intercal(\vec{y} - \vec{X}\vec{w})$, which upon expanding 
+        gives the scalar loss 
+        \begin{align*}
+            E_{\text{in}}(\vec{w}) &= 
+            \frac{1}{N}\Big(\vec{y}^\intercal\vec{y}-(\vec{X}
+            \vec{w})^\intercal\vec{y} - \vec{y}^\intercal \vec{X}\vec{w}
+            + (\vec{X}\vec{w})^\intercal (\vec{X}\vec{w}) \Big)\\
+            &= \frac{1}{N}\big(||\vec{y}||^2 - 2\vec{y}^\intercal 
+            \vec{X}\vec{w} + \vec{w}^\intercal \vec{X}^\intercal
+            \vec{X}\vec{w}\big).
+        \end{align*}
+        Note that $\vec{y}^\intercal\vec{X}\vec{w}$ and $(\vec{X}\vec{w})
+        ^\intercal\vec{y}$ are equal and were grouped together since 
+        they are scalar quantities.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        b) test
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        c) test
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        d) test
+    \end{proof}
 
 \end{document}
