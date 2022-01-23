@@ -30,7 +30,7 @@
 
 \begin{document}
     \setheader{ECE421: Introduction to Machine Learning}
-    {Homework Assignment 1}{30 January, 2022}{Pranshu Malik}{1004138916}
+    {Homework Assignment 1}{\today}{Pranshu Malik}{1004138916}
 
     \textbf{Solution 1: Perceptron Learning Algorithm}
 	
@@ -228,8 +228,8 @@
         \end{equation}
         Note that, this result follows from setting the gradient in part b) 
         to zero, from which we can infer $\hat{\vec{y}}_{\text{ls}}$ to be 
-        the least squares estimate for the training dataset. We will provide 
-        more arguments and details on this in the proof below.
+        the least squares prediction for the training dataset outputs 
+        $\vec{y}$.
     \end{proof}
 
     \begin{proof}[\unskip\nopunct]
@@ -246,9 +246,19 @@
         \]
         since the variable term goes to zero (minimum norm). It follows from 
         the definition of $\hat{\vec{y}}_{\text{ls}}$ in the previous proof, 
-        that the minimizer is $\vec{w}^\star = (\vec{X}^\top\vec{X})^{-1}
-        \vec{X}^\top\vec{y}$. Geometrically, this is true since. Projection 
-        matrix, $H$ onto the hyperplane $\mathcal{P}$. Connect to range of X.
+        that the minimizer for the loss function is $\vec{w}^\star 
+        = \vec{A}^{-1}\vec{X}^\top\vec{y}$. Geometrically, 
+        $\hat{\vec{y}}_{\text{ls}}=\vec{X}\vec{w}^\star = \vec{P}\vec{y}$ 
+        corresponds to the projection of $\vec{y}$ onto the hyperplane 
+        $\mathcal{P} = \text{Im}(X)$ since it is given by a linear 
+        combination of the column vectors of $\vec{X}$. This also means that
+        the residual error $(\vec{y}-\hat{\vec{y}}_{\text{ls}})$ is 
+        orthogonal to $\mathcal{P}$ which was supported by the previous proof 
+        when we showed that $\vec{X}^\top(\vec{y}-\vec{X}\vec{w}^\star) = 0$. 
+        Therefore, we have shown that any prediction by the linear regression 
+        model $\hat{\vec{y}}=\vec{X} \vec{w}\in\mathcal{P}$, from which it 
+        follows that $(\hat{\vec{y}}-\hat{\vec{y}}_{\text{ls}})\perp
+        (\vec{y}-\hat{\vec{y}}_{\text{ls}})$
     \end{proof}
 
 \end{document}
