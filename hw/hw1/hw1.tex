@@ -1,0 +1,263 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+% set up margins
+\oddsidemargin=0.2in
+\evensidemargin=0.2in
+\textwidth=6in
+\topmargin=0in
+\textheight=9in
+\parskip=.07in
+\parindent=0in
+\headheight=23pt
+\pagestyle{fancy}
+
+% set up header
+\newcommand{\setheader}[6]
+{
+	\lhead{{\sc #1}\\{\sc #2} ({\small \it #3})}
+	\rhead{{\bf #4}\\{#5}}
+}
+
+% set up some shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\proj}{\mathrm{proj}}
+\newcommand{\Perp}{\mathrm{perp}}
+\newcommand{\Proj}{\mathrm{proj}}
+\newcommand{\Span}{\mathrm{span}}
+\newcommand{\Null}{\mathrm{null}}
+\newcommand{\Rank}{\mathrm{rank}}
+\newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\begin{document}
+    \setheader{ECE421: Introduction to Machine Learning}
+    {Homework Assignment 1}{30 January, 2022}{Pranshu Malik}{1004138916}
+
+    \textbf{Solution 1: Perceptron Learning Algorithm}
+	
+    Given a dataset $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where 
+    $\vec{x}_i\in\R^{d+1}$ is an augmented datavector 
+    $\mat{1 & x_{i,1} & \ldots & x_{i, d}}^\top$ with label $y_i \in 
+    \{-1,1\}$, the perceptron learning algorithm performs linear 
+    classification that can be written as
+    \begin{equation}
+       \hat{y}_i = h(\vec{x}_i) = \text{sign}(\vec{w}^\top\vec{x}_i),
+    \end{equation}
+
+    where the model parameter $\vec{w} \in \R^{d+1}$ is a weightvector and
+    $\hat{y}_n$ is the predicted label. Given 
+    an incorrectly classified training point $(\vec{x}_n,y_n)\in\mathcal{D}$, 
+    the weight update rule is
+    \begin{equation}
+        \label{eqn:update_wgt}
+        \vec{w}^\prime = \vec{w} + y_n\vec{x}_n.
+    \end{equation}
+
+    \begin{proof}[\unskip\nopunct]
+        a) For a misclassified training point,
+        let $\text{sign}(\vec{w}^\top\vec{x}_n) = \hat{y}_n$, for
+        which we necessarily have $\hat{y}_n = -y_n \neq y_n$, and thus 
+        $y_n\hat{y}_n = -1$. Therefore, in general, without the $\text{sign}
+        (\cdot)$ function that strips the magnitude of the dot product, 
+        we will have $y_n\vec{w}^\top\vec{x}_n < 0$.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        b) From the weight update step in equation \eqref{eqn:update_wgt}, we 
+        have 
+        \[
+            y_n\vec{w}^{\prime\top}\vec{x}_n = y_n(\vec{w}^\top + 
+            y_i\vec{x}_n^\top)\vec{x}_n = y_n\vec{w}^\top\vec{x}_n+ 
+            y_n^2||\vec{x}_n||^2. 
+        \]
+        Since $y_n^2||\vec{x}_n||^2 > 0$, we always have
+        $y_n\vec{w}^{\prime\top}\vec{x}_n > 
+        y_n\vec{w}^{\top}\vec{x}_n$.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        c) From the above two proofs, notice that a misclassification always 
+        results in $y_n\vec{w}^\top \vec{x}_n < 0$, whereas 
+        a correct classification yields $y_n\vec{w}^\top \vec{x}_n
+        > 0$. Therefore, it can be seen that the update step introduces a net
+        addition towards making the inner product positive (hence a correct 
+        classification) for a misclassified point. 
+        This can also be viewed geometrically, where
+        the weightvector $\vec{w}$, being normal to the decision boundary (a 
+        hyperplane), changes its alignment to the misclassified datavector 
+        $\vec{x}_n$. In the case where $y_n = 1 = -\hat{y}_n$, we have an 
+        obtuse angle between the  weight and data vectors (since $\vec
+        {w}^\top \vec{x}_n < 0$), for which $\vec{w} ^{\prime} = \vec{w}+
+        \vec{x}_n$ aligns more closely with $\vec{x}_n$. In the other case 
+        where $y_n = -1 = -\hat{y}_n$, we have an acute angle between the two
+        vectors, and the updated weight $\vec{w}^{\prime} =
+        \vec{w} - \vec{x}_n$ aligns less with $\vec{x}_n$. In both cases, the
+        update magnitude is proportional to the norm of the datavector and 
+        is made in the correct direction, though it may misclassify other 
+        datavectors or not completely resolve the current error in one go.
+        But since there is no selection preference or position constraint for 
+        a misclassified datavector, the algorithm will continue to explore 
+        freely in each update.
+    \end{proof}
+
+    Thus, with the above reasoning, we can conclude that we will have a
+    definite and correct termination of the perceptron algorithm for a 
+    linearly separable dataset, since we will eventually come across an
+    update step that resolves the only remaining misclassification when the
+    decision boundary places itself in the label-separation region. Note that
+    this algorithm does not produce unique (or deterministic) results and 
+    will not terminate for non-linearly separable datasets.
+    
+    \vspace{0.5cm}
+
+    \textbf{Solution 2: Linear Regression}
+
+    Given a dataset $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where 
+    $\vec{x}_i\in\R^{d+1}$ is an augmented datavector 
+    $\mat{1 & x_{i,1} & \ldots & x_{i, d}}^\top$ with the corresponding 
+    output $y_i \in \R$, the linear regression model can be written as
+    \begin{equation}
+       \hat{y}_i = h(\vec{x}_i) = \vec{w}^\top\vec{x}_i,
+    \end{equation}
+    where the model parameter $\vec{w} \in \R^{d+1}$ is a weightvector that
+    is associated with the in-sample error, or loss function, being the 
+    mean squared error over the training dataset
+    \begin{equation}
+        \label{eqn:loss_fun_regression}
+        E_{\text{in}}(\vec{w}) = \frac{1}{N}\sum_{i=1}^N (y_i - \hat{y}_i)^2 
+        = \frac{1}{N}||\vec{y}-\hat{\vec{y}}||^2.
+    \end{equation}
+
+    In equation \eqref{eqn:loss_fun_regression}, the vectors $\vec{y} = 
+    \mat{y_1 & \ldots & y_N}^\top$ and $\hat{\vec{y}} = \mat{\hat{y}_1 & 
+    \ldots & \hat{y}_N}$ are the true and predicted outputs over the training 
+    dataset, respectively. Note that we can write $\hat{\vec{y}} = \vec{X}
+    \vec{w}$, for $\vec{X}=\mat{\vec{x}_1^\top & \ldots & \vec{x}_N^
+    \top} ^\top \in \R^{N \times d+1}$ since the inner product is 
+    commutative, i.e., $\vec{w}^\top \vec{x} = \vec{x}^\top \vec{w}$.
+
+    \begin{proof}[\unskip\nopunct]
+        a) In general, the squared norm for a vector is given by the inner 
+        product with itself. Therefore, we can write
+        $\frac{1}{N}||\vec{y}-\vec{X}\vec{w}||^2 = \frac{1}{N}(\vec{y}-\vec{X}
+        \vec{w})^\top(\vec{y} - \vec{X}\vec{w})$, which upon expanding 
+        gives the scalar loss 
+        \begin{align}
+            E_{\text{in}}(\vec{w}) &= 
+            \frac{1}{N}\Big(\vec{y}^\top\vec{y}-(\vec{X}
+            \vec{w})^\top\vec{y} - \vec{y}^\top \vec{X}\vec{w}
+            + (\vec{X}\vec{w})^\top (\vec{X}\vec{w}) \Big) \nonumber\\
+            &= \frac{1}{N}\big(\vec{y}^\top\vec{y} - 2\vec{y}^\top 
+            \vec{X}\vec{w} + \vec{w}^\top \vec{X}^\top
+            \vec{X}\vec{w}\big) \label{eqn:loss_fun_regression_vector}\\
+            &= \frac{1}{N}\big(||\vec{y}||^2-2\vec{y}^\top\hat{\vec{y}} 
+            + ||\hat{\vec{y}}||^2\big) \nonumber
+        \end{align}
+        Note that $\vec{y}^\top\vec{X}\vec{w}$ and $(\vec{X}\vec{w})
+        ^\top\vec{y}$ are equal and were grouped together since 
+        they are scalar quantities.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        b) To verify the gradient $\nabla_\vec{w}E_{\text{in}}(\vec{w})$ for
+        both the sum and matrix expressions shown above, we first consider
+        the gradient of error summation in equation 
+        \eqref{eqn:loss_fun_regression}
+        \begin{align*}
+            &\nabla_{\vec{w}}\left(\frac{1}{N}\sum_{i=1}^N (y_i - 
+            \underbrace{\vec{w}^\top\vec{x}_i}_{\hat{\vec{y}}_i})^2
+            \right) = \frac{1}{N}\mat{\frac{\partial}{\partial w_0}
+            \sum_{i=1}^N\big(y_i - (w_0x_{i, 0}+\ldots+ w_dx_{i,d})\big)^2 
+            \\\vdots\\\frac{\partial}{\partial w_d}\sum_{i=1}^N\big(y_i- 
+            (w_0x_{i, 0}+\ldots+w_dx_{i,d})\big)^2} = 
+            \frac{2}{N}\mat{\sum_{i=1}^N(\vec{w}^\top\vec{x}_i-y_i)x_{i,0}
+            \\\vdots\\\sum_{i=1}^N (\vec{w}^\top\vec{x}_i-y_i)x_{i,d}}\\
+            &= \frac{2}{N}\mat{\sum_{i=1}^Nx_{i,0}(\vec{x}_i^\top\vec{w})-
+            \sum_{i=1}^Nx_{i,0}y_i\\\vdots\\\sum_{i=1}^Nx_{i,d}(\vec{x}
+            _i^\top\vec{w})-\sum_{i=1}^Nx_{i,d}y_i} = \frac{2}{N}\left(
+            \mat{\sum_{i=1}^Nx_{i,0}\vec{x}_i^\top\\\vdots\\\sum_{i=1}^N
+            x_{i,d}\vec{x}_i^\top}\vec{w}-\sum_{i=1}^Ny_i\vec{x}_i\right) = 
+            \frac{2}{N}\big(\vec{X}^\top\vec{X}\vec{w}-\vec{X}^\top\vec{y}
+            \big),
+        \end{align*}
+        and then consider the gradient of the matrix expression in equation 
+        \eqref{eqn:loss_fun_regression_vector},
+        \[
+            \nabla_{\vec{w}}\left(\frac{1}{N}\big(\vec{y}^\top\vec{y} - 
+            2\underbrace{\vec{y}^\top \vec{X}}_{\vec{v}^\top}
+            \vec{w} + \vec{w}^\top\underbrace{\vec{X}^\top\vec{X}}
+            _{\vec{A}}\vec{w}\big)
+            \right) = \frac{1}{N}\big(-2\vec{v}+ 2\vec{A}\vec{w}\big) = 
+            \frac{2}{N}\big(\underbrace{\vec{X}^\top\vec{X}}_{\vec{A}=\vec{A}
+            ^\top}\vec{w} - \vec{X}^\top\vec{y}\big).
+        \]
+        Hence, we have shown that both expressions are equivalent.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        c) Assuming $\vec{A} = \vec{X}^\top\vec{X}$ to be invertible, we let 
+        $\vec{w}^\star=\vec{A}^{-1}\vec{X}^\top\vec{y}$ and 
+        define $\hat{\vec{y}}_{\text{ls}}=\vec{X}\vec{w}^\star$. 
+        Based on these quantities, we can rewrite the loss function as
+        \begin{align*}
+            E_{\text{in}}(\vec{w}) &= \frac{1}{N}||\underbrace{(\hat{\vec{y}}_
+            {\text{ls}}-\hat{\vec{y}})+(\vec{y}-\hat{\vec{y}}_{\text{ls}})}_
+            {=\vec{y}-\hat{\vec{y}}}||^2 = \frac{1}{N}\big((\hat{\vec{y}}_
+            {\text{ls}}-\hat{\vec{y}})^\top+(\vec{y}-\hat{\vec{y}}_
+            {\text{ls}})^\top\big)\big((\hat{\vec{y}}_{\text{ls}}-\hat{
+            \vec{y}})+(\vec{y}-\hat{\vec{y}}_{\text{ls}})\big)\\
+            &= \frac{1}{N}\big(||\hat{\vec{y}}_{\text{ls}}-\hat{\vec{y}}||^2
+            +2(\hat{\vec{y}}_{\text{ls}}-\hat{\vec{y}})^\top(\vec{y}-\hat{
+            \vec{y}}_{\text{ls}})+||\vec{y}-\hat{\vec{y}}_
+            {\text{ls}}||^2\big), \text{ where }\hat{\vec{y}}=\vec{X}\vec{w}.
+        \end{align*}
+        Further evaluating the inner product, we get
+        \begin{align*}
+            (\hat{\vec{y}}_{\text{ls}}-\hat{\vec{y}})^\top(\vec{y}-\hat{
+            \vec{y}}_{\text{ls}}) &= (\vec{X}\vec{w}^\star-\vec{X}\vec{w})^
+            \top(\vec{y}-\vec{X}\vec{w}^\star)=(\vec{w}^\star-\vec{w})^\top(
+            \vec{X}^\top\vec{y}-\vec{X}^\top\vec{X}\vec{w}^\star)\\
+            &= (\vec{w}^\star-\vec{w})^\top(\vec{X}^\top\vec{y}-\vec{A}\vec{A}
+            ^{-1}\vec{X}^\top\vec{y}) = 0.
+        \end{align*}
+        Therefore, we have shown that 
+        \begin{equation}
+            \label{eqn:loss_least_squares}
+            E_{\text{in}}(\vec{w}) = \frac{1}{N}\big(||\hat{\vec{y}}_{
+            \text{ls}}-\vec{X}\vec{w}||^2+||\vec{y}-\hat{\vec{y}}_{\text{ls}}
+            ||^2\big).
+        \end{equation}
+        Note that, this result follows from setting the gradient in part b) 
+        to zero, from which we can infer $\hat{\vec{y}}_{\text{ls}}$ to be 
+        the least squares estimate for the training dataset. We will provide 
+        more arguments and details on this in the proof below.
+    \end{proof}
+
+    \begin{proof}[\unskip\nopunct]
+        d) From equation \eqref{eqn:loss_least_squares}, it can be seen that 
+        the loss is minimum when the predicted output $\hat{\vec{y}}$ equals 
+        least squares prediction 
+        $\hat{\vec{y}}_{\text{ls}}$, i.e.,
+        \[
+            \min_{\vec{w}} E_{\text{in}}(\vec{w})=\min_{\vec{w}}\frac{1}{N}
+            \big(\underbrace{||\hat{\vec{y}}_{\text{ls}}-\vec{X}\vec{w}||^2}_
+            {\text{variable}} + \underbrace{||\vec{y}-\hat{\vec{y}}_
+            {\text{ls}}||^2}_{\text{constant}}\big) = \frac{1}{N}||\vec{y}
+            -\hat{\vec{y}}_{\text{ls}}||^2,
+        \]
+        since the variable term goes to zero (minimum norm). It follows from 
+        the definition of $\hat{\vec{y}}_{\text{ls}}$ in the previous proof, 
+        that the minimizer is $\vec{w}^\star = (\vec{X}^\top\vec{X})^{-1}
+        \vec{X}^\top\vec{y}$. Geometrically, this is true since. Projection 
+        matrix, $H$ onto the hyperplane $\mathcal{P}$. Connect to range of X.
+    \end{proof}
+
+\end{document}
