@@ -5,12 +5,9 @@
 \usepackage{amsthm}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
+\usepackage[top=1.2in, textwidth=6.5in]{geometry}
 
 % set up margins
-\oddsidemargin=0.2in
-\evensidemargin=0.2in
-\textwidth=6in
-\topmargin=0in
 \textheight=9in
 \parskip=.07in
 \parindent=0in
@@ -18,7 +15,7 @@
 \pagestyle{fancy}
 
 % set up header
-\newcommand{\setheader}[6]
+\newcommand{\setheader}[5]
 {
 	\lhead{{\sc #1}\\{\sc #2} ({\small \it #3})}
 	\rhead{{\bf #4}\\{#5}}
@@ -28,12 +25,6 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
-\newcommand{\proj}{\mathrm{proj}}
-\newcommand{\Perp}{\mathrm{perp}}
-\newcommand{\Proj}{\mathrm{proj}}
-\newcommand{\Span}{\mathrm{span}}
-\newcommand{\Null}{\mathrm{null}}
-\newcommand{\Rank}{\mathrm{rank}}
 \newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 
