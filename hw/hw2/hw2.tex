@@ -66,29 +66,116 @@
     and given any datavector $\mathbf{x}_n \in \R^{d+1}$, the 
     logistic regression model outputs the probability estimate for 
     the true class $y_n$ as
-    $$\hat{p}_\mathbf{w}(y_n\mid \mathbf{x}_n) = \theta\left(y_n\mathbf{w}
-    ^\top\mathbf{x}_n\right).$$
+    \begin{equation}
+        \label{eqn:p_hat}
+        \hat{p}_\mathbf{w}(y_n\mid \mathbf{x}_n) = \theta\left
+        (y_n\mathbf{w}^\top\mathbf{x}_n\right).
+    \end{equation}
     The loss function (in-sample error) for the model is defined 
     to be
-    $$E_{\text{in}}(\mathbf{w}) = \frac{1}{N}\sum_{n=1}^N 
-    \underbrace{-\log\left(\hat{p}_\mathbf{w}(y_n\mid \mathbf{x}_n)
-    \right)}_{e_n(\mathbf{w})}$$
+
+    \begin{equation}
+        \label{eqn:p_hat_loss}
+        E_{\text{in}}(\mathbf{w}) = \frac{1}{N}\sum_{n=1}^N 
+        \underbrace{-\log\left(\hat{p}_\mathbf{w}(y_n\mid\mathbf{x}
+        _n)\right)}_{e_n(\mathbf{w})}
+    \end{equation}
 
     \begin{proof}[\unskip\nopunct]
-        a) From above we can see that since there are only two 
-        classes, we 
+        a) From \eqref{eqn:p_hat_loss} we can see that since there 
+        are only two classes, we can rewite the loss function as
+        \begin{align}
+            E_{\text{in}}(\mathbf{w}) &=
+            \frac{1}{N}\sum_{n=1}^N \big[-I(y_n=1)\log(\hat{p}
+            _\mathbf{w}(1\mid \mathbf{x}_n)) -I(y_n=-1)\log(\hat{p}
+            _\mathbf{w}(-1\mid \mathbf{x}_n))\big]\nonumber\\
+            \label{eqn:p_hat_loss_for_gradient_matrix_form}
+            &=\frac{1}{N}\sum_{n=1}^N \Big[-\frac{1+y_n}{2}\log
+            (\hat{p}_\mathbf{w}(1\mid \mathbf{x}_n)) -\frac{1-y_n}
+            {2}\log(1-\hat{p}_\mathbf{w}(1\mid \mathbf{x}_n))\Big],
+        \end{align}
+        where $I(y_n=1)$ and $I(y_n=-1)$ are the indicator 
+        functions.
     \end{proof}
 
     \begin{proof}[\unskip\nopunct]
-        b)
+        b) From \eqref{eqn:p_hat} and \eqref{eqn:p_hat_loss} we 
+        can see that 
+        \[
+            e_n(\mathbf{w}) = -\log\left(\hat{p}_\mathbf{w}(y_n 
+            \mid \mathbf{x}_n)\right) = \log(1+e^{-y_n\mathbf{w}^
+            \top\mathbf{x}_n})    
+        \]
+        Therefore, we can also rewrite the loss function as
+        \begin{equation}
+            \label{eqn:p_hat_loss_for_gradient}
+            E_{\text{in}}(\mathbf{w}) = \frac{1}{N}\sum_{n=1}^N
+            \log(1+e^{-y_n\mathbf{w}^\top\mathbf{x}_n})
+        \end{equation}
     \end{proof}
 
     \begin{proof}[\unskip\nopunct]
-        c)
+        c) Now, from \eqref{eqn:p_hat_loss_for_gradient} we can see
+        that the gradient of the loss function is given by
+        \begin{align}
+            \nabla_{\mathbf{w}}E_{\text{in}}(\mathbf{w}) &= 
+            \frac{1}{N}\sum_{n=1}^N\nabla_\mathbf{w}\log(1+e^
+            {-y_n\mathbf{w}^\top\mathbf{x}_n}) = 
+            \frac{1}{N}\sum_{n=1}^N\frac{-y_n\mathbf{x}_n
+            e^{-y_n\mathbf{w}^\top\mathbf{x}_n}}{1+e^{-y_n 
+            \mathbf{w}^\top\mathbf{x}_n}}\nonumber\\
+            &=\frac{1}{N}\sum_{n=1}^N -y_n\mathbf{x}_n\theta(-y_n
+            \mathbf{w}^\top\mathbf{x}_n).
+        \end{align}
+        Continuing with what we established in Homework 1, here 
+        notice that for a confidently missclassified point  
+        $y_n\mathbf{w}^\top\mathbf{x}_n\ll0$ which gives 
+        $\theta(-y_n\mathbf{w}^\top\mathbf{x}_n) \approx 1$,
+        whereas for a confidently correctly classified point, we 
+        have $y_n\mathbf{w}^\top\mathbf{x}_n\gg 0$ which gives 
+        $\theta(-y_n\mathbf{w}^\top\mathbf{x}_n) \approx 0$, 
+        meaning that there is little contribution compared to the
+        misclassified case.
     \end{proof}
 
     \begin{proof}[\unskip\nopunct]
-        d)
+        d) From \eqref{eqn:p_hat_loss_for_gradient_matrix_form} 
+        notice that
+        \begin{align}
+            \nabla_{\mathbf{w}}E_{\text{in}}(\mathbf{w}) &= 
+            \frac{1}{N}\sum_{n=1}^N \Big[-\frac{1+y_n}{2}
+            \nabla_{\mathbf{w}}\log(\hat{p}_\mathbf{w}(1\mid 
+            \mathbf{x}_n)) -\frac{1-y_n}{2}\nabla_{\mathbf{w}}\log
+            (1-\hat{p}_\mathbf{w}(1\mid \mathbf{x}_n))\Big]
+            \nonumber\\
+            &=\frac{1}{2N}\sum_{n=1}^N\big[-(1+y_n)
+            (1+e^{-\mathbf{w}
+            ^\top\mathbf{x}_n})\nabla_{\mathbf{w}}(1+e^{-\mathbf{w}
+            ^\top\mathbf{x}_n})^{-1}-(1-y_n)(1+e^{\mathbf{w}
+            ^\top\mathbf{x}_n})\nabla_{\mathbf{w}}(1+e^{\mathbf{w}
+            ^\top\mathbf{x}_n})^{-1}\big]\nonumber\\
+            &=\frac{1}{2N}\sum_{n=1}^N\big[-(1+y_n)\mathbf{x}
+            _n\underbrace{\frac{e^{-\mathbf{w}^\top\mathbf{x}_n}}{
+            (1+e^{-\mathbf{w}^\top\mathbf{x}_n})}}_{\theta(-\mathbf
+            {w}^\top\mathbf{x}_n) = 1-\theta(\mathbf{w}^\top\mathbf
+            {x}_n)}+(1-y_n)\mathbf{x}_n\underbrace{\frac{e^{\mathbf
+            {w}^\top\mathbf{x}_n}}{(1+e^{\mathbf{w}^\top\mathbf{x}
+            _n})}}_{\theta(\mathbf{w}^\top\mathbf{x}_n)}\big]
+            \nonumber\\
+            &=\frac{1}{2N}\sum_{n=1}^N \mathbf{x}_n \left(
+            2\theta(\mathbf{w}^\top\mathbf{x}_n)-y_n-1\right)
+            \nonumber\\
+            &=\frac{1}{N}\mathbf{X}^\top\underbrace{\left(
+            \boldsymbol{\theta}
+            (\mathbf{X}\mathbf{w})-\frac{\mathbf{y}}{2}-
+            \frac{\mathbf{I}}{2}\right)}_{p},
+        \end{align}
+        where $\mathbf{X} = \mat{\mathbf{x}_1^\top&\ldots&\mathbf
+        {x}_N^\top}^\top\in \mathbb{R}^{N\times(d+1)}$. Notice 
+        that the expression $p$ is similar to $\mathbf{X}\mathbf{w}
+        -\mathbf{y}$ in the gradient of the mean squared error 
+        loss function (for linear regression) derived in 
+        Homework 1.
     \end{proof}
 
     \vspace{0.5cm}
