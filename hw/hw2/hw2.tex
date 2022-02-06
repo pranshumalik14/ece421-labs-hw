@@ -182,8 +182,49 @@
 
     \textbf{Solution 3: Midterm 2017, Problem 4}
 
-    a)
+    We are given $\mathcal{D}=\Big\{\left(\mat{1&1}^\top,1\right),
+    \left(\mat{1&0}^\top,-1\right)\Big\} = \{(\mathbf{x}_1, y_1), 
+    (\mathbf{x}_2, y_2)\}$ and the corresponding regularized loss 
+    function for logistic regression
 
-    b)
+    \begin{equation}
+        E_{\text{in}}(\mathbf{w}) = \lambda ||\mathbf{w}||^2 + 
+        \frac{1}{N}\sum_{n=1}^N e_n(\mathbf{w}),
+    \end{equation}
+
+    which is a shorthand for \eqref{eqn:p_hat_loss_for_gradient} 
+    except for the weight regularization term.
+
+    a) Since $\lambda = 0$, we can evaluate the loss function
+    for $\mathbf{w} = \mat{w_1 & w_2}^\top$ as follows
+    \[
+        E_{\text{in}}(\mathbf{w}) = \log(1+e^{-(w_1 + w_2)}) +
+        \log(1+e^{w_1}).
+    \]
+    This expression can be minimized if $w_1 \to -\infty$ and
+    $w_1 + w_2 \to \infty$. This can be realized with $w_2 = -2w_1$
+    and $w_1 \to \infty$, which will yield $E_{\text{in}} = 0$.
+
+    b) For $\lambda \gg 0$, we can consider $||w||\ll1$ while 
+    minimizing the loss function. For this case, we are given the
+    Taylor approximation of the loss function for $e_n(\mathbf{w}) 
+    \approx \log(2) - \frac{1}{2}y_n\mathbf{w}^\top\mathbf{x}_n$, 
+    which we can substituted into the expression loss in part a) to
+    then minimize it, i.e.,
+    \begin{align*}
+        E_{\text{in}}(\mathbf{w}) &= \lambda (w_1^2+w_2^2) + 
+        \log(1+e^{-(w_1 + w_2)}) + \log(1+e^{w_1})\\
+        &= \lambda (w_1^2+w_2^2) + \log(2) -\frac{1}{2}(w_1 + w_2)
+        + \log(2) + \frac{1}{2}w_1.
+    \end{align*}
+    Now to minimize the loss, we set
+    \begin{align*}
+        \frac{\partial E_{\text{in}} }{\partial w_1} &= 0 \implies
+         2\lambda w_1 -\frac{1}{2}+\frac{1}{2}=0 \iff w_1= 0\\
+         \frac{\partial E_{\text{in}} }{\partial w_2} &= 0 \implies
+         2\lambda w_2 -\frac{1}{2} = 0 \iff w_2=\frac{1}{4\lambda}.
+    \end{align*}
+    Thus, $\mathbf{w}^\star = \mat{0 & \frac{1}{4\lambda}}^\top$ 
+    is the minimizer.
 
 \end{document}
