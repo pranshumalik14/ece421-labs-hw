@@ -33,24 +33,50 @@
     {Homework Assignment 2}{\today}{Pranshu Malik}{1004138916}
 
     \textbf{Solution 1: Gradient Computation}
-    
-    i) 
+
+    We use the knowledge of the following rules to calculate the gradients: 
+    $\nabla_\mathbf{w}(\mathbf{w}^\top\mathbf{v}) = \nabla_\mathbf{w}(
+    \mathbf{v}^\top\mathbf{w}) = \mathbf{v}$ and $\nabla_\mathbf{w}(\mathbf{w}
+    ^\top\mathbf{A}\mathbf{w}) = (\mathbf{A}+\mathbf{A}^\top)\mathbf{w}$ for 
+    some matrix $\mathbf{A}\in\R^{d\times d}$ and $\mathbf{w}, \mathbf{v}\in
+    \R^d$.
+
+    i) The gradient reduces to $\nabla_{\mathbf{w}} f = 2(\mathbf{A}+\mathbf
+    {A}^\top)\mathbf{v}$
 
 
-    ii)
+    ii) $\nabla_{\mathbf{w}} f = (\mathbf{A}+\mathbf{A}^\top)\mathbf{w}$
 
 
-    iii)
+    iii) $\nabla_{\mathbf{w}} f = \mat{\theta(w_1) & \ldots & \theta(w_d)}
+    ^\top$, where $\theta(s) = \frac{e^s}{1+e^s}= \frac{1}{1+e^{-s}}$ is the 
+    logistic function.
 
 
-    iv)
+    iv) $\nabla_{\mathbf{w}} f = \frac{\mathbf{w}}{\sqrt{1+||\mathbf{w}||^2}}$
 
     \vspace{0.5cm}
 
     \textbf{Solution 2: Logistic Regression}
 
+    For the dataset 
+    $\mathcal{D} = \{(\vec{x}_i, y_i)\}_{i=1}^N$, where $\vec{x}
+    _i\in\R^{d+1}$ is an augmented datavector $\mat{1 & x_{i,1} & 
+    \ldots & x_{i, d}}^\top$ with label $y_i \in \{-1,1\}$, 
+    and given any datavector $\mathbf{x}_n \in \R^{d+1}$, the 
+    logistic regression model outputs the probability estimate for 
+    the true class $y_n$ as
+    $$\hat{p}_\mathbf{w}(y_n\mid \mathbf{x}_n) = \theta\left(y_n\mathbf{w}
+    ^\top\mathbf{x}_n\right).$$
+    The loss function (in-sample error) for the model is defined 
+    to be
+    $$E_{\text{in}}(\mathbf{w}) = \frac{1}{N}\sum_{n=1}^N 
+    \underbrace{-\log\left(\hat{p}_\mathbf{w}(y_n\mid \mathbf{x}_n)
+    \right)}_{e_n(\mathbf{w})}$$
+
     \begin{proof}[\unskip\nopunct]
-        a)
+        a) From above we can see that since there are only two 
+        classes, we 
     \end{proof}
 
     \begin{proof}[\unskip\nopunct]
