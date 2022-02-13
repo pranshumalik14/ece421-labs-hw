@@ -34,7 +34,43 @@
 
     \textbf{Solution 1: Taylor Approximation}
 
-    Hello
+    Given a scalar function $f: \R^n \to \R$, its first-order Taylor 
+    approximation about a point $\vec{z}\in\R^n$ is given by $\widehat{f} 
+    (\vec{x}) = f(\vec{z}) + \nabla f(\vec{z})^\top (\vec{x}-\vec{z})$. We 
+    will consider the function, 
+    \[
+        E(u,v) = e^u + e^{2v} + e^{uv} + u^2 - 3uv + 4v^2 - 3u -5v,
+    \]
+    where $u$ and $v$ are scalars.
+
+    a) The first-order Taylor approximation of $E(u + \Delta u, v+\Delta v)$ 
+    about $\vec{z} = \mat{u&v}^\top = \mat{0&0}^\top$ is 
+    \[
+        \widehat{E}(\Delta u, \Delta v) = E(0,0) + \nabla E(0,0)^\top 
+        \mat{\Delta u \\ \Delta v}.
+    \]
+    We have $E(0,0) = 3$ and $\nabla E(u,v) = \mat{\frac{\partial E}{\partial 
+    u}\vspace{0.1cm} \\ \frac{\partial E}{\partial v}} = \mat{e^u ve^{uv} + 
+    2u -3v -3\\ 2e^{2v} + ue^{uv} + 2u + 8v -5}$. Substituting in 
+    above, we get
+    \[
+        \widehat{E}(\Delta u,\Delta v)=3+\mat{-2&-3}\mat{\Delta u\\ \Delta v}
+        = 3 - 2\Delta u - 3\Delta v.
+    \]
+    Comparing the expression above, we can infer $a = 3, a_u = -2, a_v = -3$.
+
+    b) To minimize $\widehat{E}$ over all possible steps of $\Delta u$ and
+    $\Delta v$, such that the stepsize $||(\Delta u, \Delta v)|| = 0.5$, we 
+    use our knowledge of gradient descent. Particularly, the step should be 
+    in the direction of $-\nabla\widehat{E}$. Therefore,
+    \[
+        \mat{\Delta u\\\Delta v} = -c\nabla\widehat{E}(0,0) = c\mat{2\\3},
+    \]
+    for some $c>0$. Now, applying the stepsize constraint, we have $0.5 = 
+    c\sqrt{2^2 + 3^2} \iff c = \frac{1}{2\sqrt{13}}$. Hence, the minimizer is
+    \[
+        \mat{\Delta u^\star\\\Delta v^\star} = \frac{1}{2\sqrt{13}}\mat{2\\3}.
+    \]
 
     \vspace{0.5cm}
 
