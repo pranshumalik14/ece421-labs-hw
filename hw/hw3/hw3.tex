@@ -67,16 +67,129 @@
         \mat{\Delta u\\\Delta v} = -c\nabla\widehat{E}(0,0) = c\mat{2\\3},
     \]
     for some $c>0$. Now, applying the stepsize constraint, we have $0.5 = 
-    c\sqrt{2^2 + 3^2} \iff c = \frac{1}{2\sqrt{13}}$. Hence, the minimizer is
+    c\sqrt{2^2 + 3^2} \iff c = \frac{1}{2\sqrt{13}}$. Hence, the minimizer 
+    at $(0,0)$ is
     \[
         \mat{\Delta u^\star\\\Delta v^\star} = \frac{1}{2\sqrt{13}}\mat{2\\3}.
     \]
 
     \vspace{0.5cm}
 
-    \textbf{Solution 2: Logistic Regression and Multi-class 
-    Softmax Regression}
+    \textbf{Solution 2: Logistic and Multi-class Softmax Regression (Midterm 
+    2019, Problem 4)}
 
-    Hello
+    We consider a multi-class softmax regression model to classify datavectors
+    $\vec{x}_i\in\R^{d+1}$ into class labels $y_i\in\{1,2\}$. The 
+    weightvectors $\vec{w}(1), \vec{w}(2)$ correspond to classes $1$ and $2$ 
+    respectively. Given any datavector $\vec{x}_n\in\R^{d+1}$, the model 
+    yields the probability estimate for true class $y_n \in \{1, 2\}$ as
+    \begin{equation}
+        \label{eqn:softmax}
+        \hat{p}^{\text{SM}}_{\Omega}(y_n\mid\vec{x}_n) = \frac{e^{\vec{w}(y_n)
+        ^\top\vec{x}_n}}{\sum_{i=1}^2e^{\vec{w}(i)^\top\vec{x}_n}},
+    \end{equation}
+    where $\Omega = \{\vec{w}(1), \vec{w}(2)\}$. The corresponding loss 
+    function for the training sample $(\vec{x}_n,y_n)$ is
+    \begin{equation}
+        \label{eqn:loss}
+        e_n^{\text{SM}}(\Omega) = -\log\left(\hat{p}^{\text{SM}}_{\Omega}
+        (y_n\mid\vec{x}_n)\right).
+    \end{equation}
+    Similarly, we consider the binary logistic regression model from Homework 
+    2, that produces the probability estimate for the datavector belonging to
+    class $1$ as
+    \begin{equation}
+        \label{eqn:logistic}
+        \hat{p}^{\text{LR}}_{\vec{w}}(y_n=1\mid\vec{x}_n) = \frac{e^{\vec{w}
+        ^\top\vec{x}_n}}{1+e^{\vec{w}^\top\vec{x}_n}}.
+    \end{equation}
+    Subsequently, the probability estimate for class $2$ is $\hat{p}^{\text
+    {LR}}_{\vec{w}}(y_n=2\mid\vec{x}_n) = 1-\hat{p}^{\text{LR}}_{\vec{w}}
+    (y_n=1\mid\vec{x}_n)$. The single- sample loss function remains identical
+    to softmax and is given by
+    \begin{equation}
+        e_n^{\text{LR}}(\vec{w}) = -\log\left(\hat{p}^{\text{LR}}_{\vec{w}}
+        (y_n\mid\vec{x}_n)\right).
+    \end{equation}
+
+    a) The gradient of $e_n^{\text{SM}}$ will have to be calculated for both
+    cases of $y_n$. We first expand the single-sample loss function in 
+    \eqref{eqn:loss} as
+    \begin{equation}
+        \label{eqn:loss_rewritten}
+        e_n^{\text{SM}}(\Omega) = -\vec{w}(y_n)^\top\vec{x}_n+\log\left
+        (\sum_{i=1}^2e^{\vec{w}(i)^\top\vec{x}_n}\right).
+    \end{equation}
+    Now, evaluating the gradient about $\vec{w}(j)$ some $j\in\{1,2\}$ we have
+    \begin{equation}
+        \label{eqn:loss_grad}
+        \nabla_{\vec{w}(j)}e^{\text{SM}}_n(\Omega) = 
+        \underbrace{\nabla_{\vec{w}(j)}\big[-\vec{w}(y_n)^\top\vec{x}_n\big]}_
+        {\nabla_{\vec{w}(j)}e_{n,1}^{\text{SM}}}
+        + \underbrace{\nabla_{\vec{w}(j)}\Bigg[\log\left
+        (\sum_{i=1}^2e^{\vec{w}(i)^\top\vec{x}_n}\right)\Bigg]}_
+        {\nabla_{\vec{w}(j)}e_{n,2}^{\text{SM}}}.
+    \end{equation}
+    Further evaluating the two subparts in \eqref{eqn:loss_grad}, we get
+    \begin{align}
+        \label{eqn:loss_grad_pt_1}
+        \nabla_{\vec{w}(j)}e_{n,1}^{\text{SM}} &= 
+        \begin{cases}
+            0 & y_n \neq j\\
+            -\vec{x}_n & y_n = j
+        \end{cases},\\
+        \label{eqn:loss_grad_pt_2}
+        \nabla_{\vec{w}(j)}e_{n,2}^{\text{SM}} &= \frac{e^{\vec{w}(j)^\top\vec
+        {x}_n}\nabla_{\vec{w}(j)}(\vec{w}(j)^\top\vec{x}_n)}{\sum_{i=1}^2e^
+        {\vec{w}(i)^\top\vec{x}_n}} = \vec{x}_n\frac{e^{\vec{w}(j)^\top\vec{x}
+        _n}}{\sum_{i=1}^2e^{\vec{w}(i)^\top\vec{x}_n}}.
+    \end{align}
+    Finally, after combining \eqref{eqn:loss_grad_pt_1} and 
+    \eqref{eqn:loss_grad_pt_2}, we get the gradient of the loss 
+    function over $y_n,j\in\{1,2\}$ as
+    \begin{equation}
+        \nabla_{\vec{w}(j)}e^{\text{SM}}_n(\Omega) = 
+        \begin{cases}
+            \vec{x}_n\frac{e^{\vec{w}(j)^\top\vec{x}_n}}{\sum_{i=1}^2e^{\vec
+            {w}(i)^\top\vec{x}_n}} & y_n \neq j\\ 
+            \vec{x}_n\left(\frac{e^{\vec{w}(j)^\top\vec{x}_n}}{\sum_{i=1}^2e^
+            {\vec{w}(i)^\top\vec{x}_n}}-1\right) & y_n = j
+        \end{cases}.
+    \end{equation}
+
+    b) For the classification probability estimates to be identical across
+    logistic and softmax regression, we need to have the following equality,
+    \begin{align}
+        \hat{p}^{\text{SM}}_{\Omega}(y_n=1\mid\vec{x}_n)=\hat{p}^{\text{LR}}
+        _{\vec{w}}(y_n=1\mid\vec{x}_n) &\iff \frac{e^{\vec{w}(1)^\top\vec{x}
+        _n}}{e^{\vec{w}(1)^\top\vec{x}_n}+e^{\vec{w}(2)^\top\vec{x}_n}} = 
+        \frac{e^{\left(\vec{w}(1)-\vec{w}(2)\right)^\top\vec{x}_n}}{1+e^{\left
+        (\vec{w}(1)-\vec{w}(2)\right)^\top\vec{x}_n}} = 
+        \frac{e^{\vec{w}^\top\vec{x}_n}}{1+e^{\vec{w}^\top\vec{x}_n}}\\
+        \label{eqn:prob_eq}
+        &\iff \vec{w} = \vec{w}(1) - \vec{w}(2).
+    \end{align}
+    Thus, both models are identical if and only if \eqref{eqn:prob_eq} holds.
+
+    c) The stochastic gradient descent (SGD) involves the following weight 
+    update rule for a randomly selected datavector index $n$ in the dataset
+    \begin{equation}
+        \vec{w}_{k+1} = \vec{w}_k - \epsilon\nabla_{\vec{w}_k}e_n,
+    \end{equation}
+    where $k\in\N$ is the iteration or epoch number and $\epsilon>0$ is the 
+    learning rate. Having already calculated the gradient of single-sample 
+    loss in softmax regression, we invoke the same for logistic regression 
+    below from our work in Homework 2.
+    \begin{equation}
+        \nabla_{\vec{w}}e_n^{\text{LR}}(\vec{w}) = 
+        \begin{cases}
+            x & 9
+        \end{cases}.
+    \end{equation}
+    For the logistic and softmax regression to have identical
+    evolution of weight updates, we need to have the following equality
+    \begin{equation*}
+        x
+    \end{equation*}
 
 \end{document}
