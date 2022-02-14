@@ -148,6 +148,7 @@
     \eqref{eqn:loss_grad_pt_2}, we get the gradient of the loss 
     function over $y_n,j\in\{1,2\}$ as
     \begin{equation}
+        \label{eqn:sm_loss_grad_combined}
         \nabla_{\vec{w}(j)}e^{\text{SM}}_n(\Omega) = 
         \begin{cases}
             \vec{x}_n\frac{e^{\vec{w}(j)^\top\vec{x}_n}}{\sum_{i=1}^2e^{\vec
@@ -183,13 +184,42 @@
     \begin{equation}
         \nabla_{\vec{w}}e_n^{\text{LR}}(\vec{w}) = 
         \begin{cases}
-            x & 9
+            \vec{x}_n\frac{-e^{-\vec{w}^\top\vec{x}_n}}{1+e^{-\vec{w}^\top\vec
+            {x}_n}} & y_n = 1\\
+            \vec{x}_n\frac{e^{\vec{w}^\top\vec{x}_n}}{1+e^{\vec{w}^\top\vec
+            {x}_n}} & y_n = 2
         \end{cases}.
     \end{equation}
-    For the logistic and softmax regression to have identical
-    evolution of weight updates, we need to have the following equality
-    \begin{equation*}
-        x
-    \end{equation*}
-
+    Therefore, the SGD weight updates for logistic regression for $y_n=1$ 
+    will be
+    \begin{equation}
+        \label{eqn:lr_sgd}
+        \vec{w}_{k+1} = \vec{w}_k + \epsilon^{\text{LR}}
+        \frac{\vec{x}_n e^{-\vec{w}_k^\top\vec{x}_n}}{1+e^{-\vec{w}_k^\top\vec
+        {x}_n}}.
+    \end{equation}
+    Similarly, using \eqref{eqn:sm_loss_grad_combined}, the the SGD weight 
+    updates for softmax regression for $y_n=1$ will be
+    \begin{align}
+        \label{eqn:sm_sgd_w_1}
+        \vec{w}_{k+1}(1) &= \vec{w}_k(1) + \epsilon^{\text{SM}}\frac{\vec{x}_n
+        e^{\vec{w}_k(2)^\top\vec{x}_n}}{e^{\vec{w}_k(1)^\top\vec{x}_n}+e^{\vec
+        {w}_k(2)^\top\vec{x}_n}}\\
+        \label{eqn:sm_sgd_w_2}
+        \vec{w}_{k+1}(2) &= \vec{w}_k(2) - \epsilon^{\text{SM}}\frac{\vec{x}_n
+        e^{\vec{w}_k(2)^\top\vec{x}_n}}{e^{\vec{w}_k(1)^\top\vec{x}_n}+e^{\vec
+        {w}_k(2)^\top\vec{x}_n}}.
+    \end{align} 
+    Now, comparing \eqref{eqn:lr_sgd} to $\eqref{eqn:sm_sgd_w_1}
+    -\eqref{eqn:sm_sgd_w_2}$ and utilizing \eqref{eqn:prob_eq} to simplify 
+    the gradient terms in softmax regression, we can infer that
+    \begin{equation}
+        \vec{w}_k + \epsilon^{\text{LR}}\frac{\vec{x}_n}{1+e^{\vec{w}
+        _k^\top\vec{x}_n}}=\underbrace{\left(\vec{w}_k(1)-\vec{w}_k(2)\right)}
+        _{\vec{w}_k} + \epsilon^{\text{SM}}\frac{\vec{x}_n}{1+e^{\vec{w}_k
+        ^\top\vec{x}_n}}
+        \iff \epsilon^{\text{LR}} = 2\epsilon^{\text{SM}},
+    \end{equation}
+    can only make the evolution of SGD weight updates identical across 
+    logistic and softmax regression.
 \end{document}
