@@ -6,6 +6,8 @@
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage[top=1.2in, textwidth=6.5in]{geometry}
+\usepackage{tikzit}
+\input{nn_nodes.tikzstyles}
 
 % set up margins
 \textheight=9in
@@ -41,5 +43,9 @@
     \textbf{Solution 2: <>}
 
     Hello again.
-    
+    \ctikzfig{OR_nn}
+    \ctikzfig{AND_nn}
+    \ctikzfig{innerprod_nn}
+    \ctikzfig{OR_x1_x2bar_x3}
+
 \end{document}

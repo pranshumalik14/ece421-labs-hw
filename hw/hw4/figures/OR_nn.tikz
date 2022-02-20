@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (5) at (-6, 5) {};
+		\node [style=none] (6) at (-6, 0) {};
+		\node [style=none] (7) at (-3.25, 3) {};
+		\node [style=none] (9) at (-7.5, 5.45) {$M-\frac{1}{2}$};
+		\node [style=none] (10) at (-7.5, 3.4) {$1$};
+		\node [style=none] (11) at (-7.5, -0.35) {$1$};
+		\node [style=none] (16) at (-0.5, 3) {\texttt{OR}$(x_1, \ldots, x_M)$};
+		\node [style=sign] (17) at (-5, 3) {$\psi$};
+		\node [style=input] (18) at (-10, 5) {$1$};
+		\node [style=input] (19) at (-10, 3) {$x_1$};
+		\node [style=input] (20) at (-10, 0) {$x_M$};
+		\node [style=none] (21) at (-10, 1.625) {$\vdots$};
+		\node [style=none] (23) at (-11, 5) {$x_0$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (18) to (5.center);
+		\draw (20) to (6.center);
+		\draw [style=direct] (19) to (17);
+		\draw [style=direct] (6.center) to (17);
+		\draw [style=direct] (5.center) to (17);
+		\draw [style=direct] (17) to (7.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
