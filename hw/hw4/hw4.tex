@@ -39,23 +39,128 @@
     \setheader{ECE421: Introduction to Machine Learning}
     {Homework Assignment 4}{\today}{Pranshu Malik}{1004138916}
 
-    \textbf{Solution 1: <>}
+    \textbf{Solution 1: Decision Functions}
 
-    Hello
+    We would like to implement a piecewise linear target 
+    (ground-truth) function $f$ which classifies regions in $\R^2$ into two 
+    classes, positive $(+)$ and negative $(-)$, using three independent
+    hypothesis functions: $h_1$, $h_2$, $h_3$.
+
+    \begin{proof}[\unskip\nopunct]
+        a) From the figure, it can be seen that there are three regions with 
+        the positive label, namely $\mathcal{R}_1 = \overline{h_1}h_2h_3$, 
+        $\mathcal{R}_2 = h_1h_2\overline{h_3}$, and $\mathcal{R}_3 = 
+        h_1\overline{h_2}h_3$. Therefore, for any given input vector $\vec{x} 
+        = \mat{x_1 & x_2}^\top$, $f(\vec{x}) = +$ if and only if $\vec{x} \in 
+        \mathcal{R}_1\cup\mathcal{R}_2\cup\mathcal{R}_3$, or equivalently, we 
+        can write the resulting expression for $f$ by using the 
+        sum of products (SOP) criterion as follows: $f = \overline{h_1}h_2h_3 
+        + h_1h_2\overline{h_3} + h_1\overline{h_2}h_3$.
+    \end{proof}
+
+    b) Yes, similar to above, we can decompose any target decision function 
+    using the SOP criterion over all $+$ regions. Furthermore, the Universal 
+    Approximation Theorem (for Neural Networks) states that any smooth 
+    decision boundary can be approximated by piecewise linear functions which 
+    can always be implemented using three layers (including input and output 
+    layers) and sufficiently many nodes in the hidden layer.
 
     \vspace{0.5cm}
 
-    \textbf{Solution 2: <>}
+    \textbf{Solution 2: Decision Function Implementation}
 
-    Hello again.
-    \ctikzfig{OR_nn}
-    \ctikzfig{AND_nn}
-    \ctikzfig{innerprod_nn}
-    \ctikzfig{OR_x1_x2bar_x3}
+    a) To extend the logical \texttt{OR} function for 
+    vectors $\vec{x}\in\{-1,1\}^M$, we observe the following: the output is
+    $-1$ if and only if all components of the input are $-1$, i.e. 
+    $\sum_{i=1}^{M}x_i = -M$; otherwise the output remains $+1$. Therefore,
+    the decision rule can be written as $h(\vec{x}) = \text{sign}\left(\sum_
+    {i=1}^M x_i + M - \frac{1}{2}\right)$. In all graphical representations
+    below, the activation function $\psi$ is the $\text{sign}$ function.
+    \begin{figure}[!h]
+        \ctikzfig{OR_nn}
+        \caption{Neural network implementation of logical \texttt{OR}}
+    \end{figure}
+    
+    Likewise, the decision rule for \texttt{AND} operation, can be written as
+    $h(\vec{x}) = \text{sign}\left(\sum_{i=1}^M x_i - M + \frac{1}{2}\right)$.
+    Its graphical representation is shown below.
+    \begin{figure}[!h]
+        \ctikzfig{AND_nn}
+        \caption{Neural network implementation of logical \texttt{AND}}
+    \end{figure}
+    
+    \pagebreak
+
+    b) Following the above, we can implement the inner product of a vector 
+    $\vec{x}$ and weights $\vec{w}$ by the network given below.
+    \begin{figure}[!ht]
+        \ctikzfig{innerprod_nn}
+        \caption{Neural network implementation of $h(\vec{x}) = \text{sign}
+        (\vec{w}^\top\vec{x})$ for $\vec{x}, \vec{w} \in \R^n$}
+    \end{figure}
+    
+    c) Again, following part a), we can implement \texttt{OR} with negated 
+    arguments as below (note $M=3$). 
+    \begin{figure}[!ht]
+        \ctikzfig{OR_x1_x2bar_x3}
+        \caption{Neural network implementation of $\texttt{OR}(x_1,\overline
+        {x_2},x_3)$}
+    \end{figure}
 
     \pgfplotsset{custom/.append style={axis x line=middle, 
     axis y line=middle, xlabel={$x_1$}, ylabel={$x_2$}, axis 
     equal}}
+
+    \vspace{0.5cm}
+
+    \textbf{Solution 3: Decision Function Implementation (Midterm 2019, 
+    Problem 3)}
+
+    a) We get the following truth table after evaluating all combinations of
+    inputs $(x_1, x_2) \in \{0,1\}^2$.
+    
+    \begin{table}[h]
+        \[
+            \begin{array}{cccc}
+                x_1 & x_2 & \nu & \psi(\nu) \\ \hline
+                0 & 0 & 0 & 0 \\
+                0 & 1 & 1 & 0 \\
+                1 & 0 & 1 & 0 \\
+                1 & 1 & 2 & 1
+            \end{array}
+        \]
+    \end{table}
+
+    By observation, it is evident that the function is the \texttt{AND} 
+    operation.
+
+    b) Again, by observing the given truth table, it is evident that the new 
+    function is the \texttt{OR} operation which can be realized by the same 
+    neural network in part a), but by modifying of the activation 
+    function to be 
+
+    \[
+        \psi(\nu) = 
+        \begin{cases}
+            1 & \nu \geq 1 \\
+            0 & \text{else }
+        \end{cases}.
+    \]
+
+    c) The given truth table is shown in graphical form in Figure 
+    \ref{fig:XOR}, from which it is evident that the target function (\texttt
+    {XOR}) is not separable by a single linear function, or plane, and hence 
+    can not be implemented using a single layer. But, the target labels can 
+    be computed by one layer if we can allow bivariate non-linear 
+    activation functions, such as
+    \[
+        \psi(x_1, x_2) = 
+        \begin{cases}
+            1 & \frac{1}{2} \leq x_1 + x_2 \leq \frac{3}{2} \\
+            0 & \text{else}
+        \end{cases}.
+    \]
+
     \begin{figure}[ht]
         \centering
         \begin{tikzpicture}
@@ -72,6 +177,8 @@
             \addlegendentry{$\psi(\vec{x})$}
             \end{axis}
         \end{tikzpicture}
+        \caption{$\texttt{XOR}(\vec{x})$ for $\vec{x} \in \{0,1\}^2$}
+        \label{fig:XOR}
     \end{figure}
 
 \end{document}
