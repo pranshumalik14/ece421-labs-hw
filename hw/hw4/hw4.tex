@@ -6,8 +6,13 @@
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage[top=1.2in, textwidth=6.5in]{geometry}
+
+% set up graphics
 \usepackage{tikzit}
 \input{nn_nodes.tikzstyles}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
 
 % set up margins
 \textheight=9in
@@ -47,5 +52,26 @@
     \ctikzfig{AND_nn}
     \ctikzfig{innerprod_nn}
     \ctikzfig{OR_x1_x2bar_x3}
+
+    \pgfplotsset{custom/.append style={axis x line=middle, 
+    axis y line=middle, xlabel={$x_1$}, ylabel={$x_2$}, axis 
+    equal}}
+    \begin{figure}[ht]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[custom,xmin=-0.1,xmax=1.25,ymin=-0.15, 
+            ymax=1.25,xtick={0,1},ytick={0,1}, legend pos=outer north east]
+            \addplot[mark=*,fill=white,only marks,mark size=4pt] 
+            coordinates {(0,0)(1,1)};
+            \addlegendentry{$g(\vec{x}) = 0$}
+            \addplot[mark=*,only marks,mark size=4pt] 
+            coordinates {(0,1)(1,0)};
+            \addlegendentry{$g(\vec{x}) = 1$}
+            \addplot[dashed] {-x+0.5};
+            \addplot[dashed] {-x+1.5};
+            \addlegendentry{$\psi(\vec{x})$}
+            \end{axis}
+        \end{tikzpicture}
+    \end{figure}
 
 \end{document}
