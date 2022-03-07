@@ -32,14 +32,54 @@
     \setheader{ECE421: Introduction to Machine Learning}
     {Homework Assignment 5}{\today}{Pranshu Malik}{1004138916}
 
-    \textbf{Solution 1: }
+    \textbf{Solution 1: Forward and Back Propagation}
 
     Derive gradients.
 
     \vspace{0.5cm}
 
-    \textbf{Solution 2: }
+    \textbf{Solution 2: Neural Networks and Gradients}
 
-    Begin list and go on.
+    Given the network architecture, we can derive the gradients of the sample 
+    loss with respect to the layer activations and weights. The input to the 
+    model is the feature or data vector $\vec{x}\in\R^3$ and the
+    corresponding ground-truth response $y\in\R$. The model parameters are 
+    two scalar weights $\Omega = (w, v)$. We use the squared loss function, 
+    $e(\Omega) = (\hat{y}-y)^2$, where $\hat{y}$ is the model output.
+
+    a) We can express $\frac{\partial e}{\partial v} = \frac{\partial e}
+    {\partial \hat{y}}\frac{\partial \hat{y}}{\partial v}$. We know that
+    $\frac{\partial e}{\partial \hat{y}} = 2(\hat{y}-y) = 2\Delta$, and
+    $\frac{\partial \hat{y}}{\partial v} = \frac{\partial x^{(3)}_1}{\partial 
+    v}+\frac{\partial vx^{(2)}_2}{\partial v}$. Thus, evaluting, we get $\frac
+    {\partial e}{\partial v} = 2\Delta\left(x^{(2)}_2 + vx^{(1)}_1\right)$.
+
+    b) We derive the expressions for the gradients of the loss with respect to
+    the various layer activations below. For the same, we first express the 
+    model output in terms of first and second layer activations: $\hat{y} = 
+    x^{(1)}_3 + v\left(x^{(1)}_2 + vx^{(1)}_1\right)$. Then, we can write
+    \begin{itemize}
+        \item $\frac{\partial e}{\partial x^{(2)}_2} = \frac{\partial e}
+        {\partial \hat{y}}\frac{\partial \hat{y}}{\partial x^{(2)}_2} = 
+        2\Delta v$
+        \item $\frac{\partial e}{\partial x^{(1)}_1} = \frac{\partial e}
+        {\partial \hat{y}}\frac{\partial \hat{y}}{\partial x^{(1)}_1} = 
+        2\Delta v^2$
+        \item $\frac{\partial e}{\partial x^{(1)}_2} = \frac{\partial e}
+        {\partial \hat{y}}\frac{{\partial \hat{y}}}{\partial x^{(1)}_2} = 
+        2\Delta v$
+        \item $\frac{\partial e}{\partial x^{(3)}_1} = \frac{\partial e}
+        {\partial \hat{y}}\frac{\partial \hat{y}}{\partial x^{(3)}_1} = 
+        2\Delta$
+    \end{itemize}
+
+    c) We know that $\frac{\partial e}{\partial w} = \frac{\partial e}
+    {\partial x^{(1)}_3}\frac{\partial x^{(1)}_3}{\partial w} + \frac
+    {\partial e}{\partial x^{(1)}_2}\frac{\partial x^{(1)}_2}{\partial w} + 
+    \frac{\partial e}{\partial x^{(1)}_1}\frac{\partial x^{(1)}_1}{\partial w}
+    $. We can write $\frac{\partial x_i^{(1)}}{\partial w} = \theta^\prime(wx^
+    {(0)}_i)x^{(0)}_i$ for $i = 1,2,3$, and by using the above parts, we 
+    finally get that $\frac{\partial e}{\partial w} = 2\Delta\sum_{i=1}^3v^
+    {3-i}\theta^\prime(wx^{(0)}_i)x^{(0)}_i$.
 
 \end{document}
