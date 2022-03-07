@@ -32,9 +32,40 @@
     \setheader{ECE421: Introduction to Machine Learning}
     {Homework Assignment 5}{\today}{Pranshu Malik}{1004138916}
 
-    \textbf{Solution 1: Forward and Back Propagation}
+    \textbf{Solution 1: Forward and Backward Propagation}
 
-    Derive gradients.
+    Given the network architecture and input $(x^{(0)}_1=2, y=1)$ the 
+    squared loss function $e$, and the weight matrices already provided in 
+    the example, we will first perform the forward propagation. 
+    \begin{itemize}
+        \item $\vec{s}^{(1)} = \mat{0.7 & 1}^\top$
+        \item $\vec{x}^{(1)} = \mat{0.6044 & 0.7616}^\top$ (in this solution, 
+        we exclude bias while expressing all layer activations)
+        \item $s^{(2)}_1 = -1.4804$
+        \item $x^{(2)}_1 = -0.9015$
+        \item $s^{(3)}_1 = -0.8031$
+        \item $x^{(3)}_1 = -0.6658$
+    \end{itemize}
+
+    Using the information above, we can now proceed to computing the backward 
+    propagation.
+    \begin{itemize}
+        \item $\boldsymbol{\delta}^{(3)} = 2\left(x^{(3)}_1-y\right)
+        \tanh^\prime(s^{(3)}_1) = \mat{-1.855}^\top$
+        \item $\boldsymbol{\delta}^{(2)} = \mathbf{W}^{(3)}\boldsymbol{\delta}
+        ^{(3)}\odot\tanh^\prime(\vec{s}^{(2)}) = \mat{-0.69}^\top$
+        \item $\boldsymbol{\delta}^{(1)} = \mathbf{W}^{(2)}\boldsymbol{\delta}
+        ^{(2)}\odot\tanh^\prime(\vec{s}^{(1)}) = \mat{-0.44&0.88}^\top$
+    \end{itemize}
+
+    Thus, using the information above, we can compute the following.
+    \begin{itemize}
+        \item $\frac{\partial e}{\partial \mathbf{W}^{(3)}} = \mat{1&\vec{x}^{
+        (2)\top}}^\top\boldsymbol{\delta}^{(3)\top} = \mat{-1.85&1.67}^\top$
+        \item $\frac{\partial e}{\partial \mathbf{W}^{(2)}} = \mat{1&\vec{x}^{
+        (1)\top}}^\top\boldsymbol{\delta}^{(2)\top} = \mat{-0.69&-0.42&-0.53}
+        ^\top$
+    \end{itemize}
 
     \vspace{0.5cm}
 
