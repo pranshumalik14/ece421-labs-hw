@@ -1,0 +1,62 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[top=1.2in, textwidth=6.5in]{geometry}
+
+% set up margins
+\textheight=9in
+\parskip=.07in
+\parindent=0in
+\headheight=23pt
+\pagestyle{fancy}
+
+% set up header
+\newcommand{\setheader}[5]
+{
+	\lhead{{\sc #1}\\{\sc #2} ({\small \it #3})}
+	\rhead{{\bf #4}\\{#5}}
+}
+
+% set up some shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\begin{document}
+    \setheader{ECE421: Introduction to Machine Learning}
+    {Homework Assignment 6}{\today}{Pranshu Malik}{1004138916}
+
+    \textbf{Solution 1: K-Means Clustering (Final Exam 2018, Problem 6)}
+
+    Given the dataset $\mathcal{D} = \{0, 0.5, 0.5+\Delta, 1.5+\Delta\}$,
+    where $\Delta \geq 0$ and considering $K=2$ clusters, $\mathcal{B}_1$ and 
+    $\mathcal{B}_2$, are the two clusters with means $\mu_1$ and $\mu_2$ 
+    respectively, we solve the problem subparts using Lloyd's algorithm.
+
+    a) Letting $\Delta=0.5$ and initializing the means to $\mu_1[0]=1, 
+    \mu_2[0] = 2$, we find the following clustering:
+    \begin{itemize}
+        \item $\mathcal{B}_1[0] = \{0, 0.5, 1\}$
+        \item $\mathcal{B}_2[0] = \{2\}$.
+    \end{itemize}
+    Continuing the Lloyd's algorithm, we find the new means:
+    \begin{itemize}
+        \item $\mu_1[1] = \frac{0+0.5+1}{3}=0.5$
+        \item $\mu_2[1] = 2$.
+    \end{itemize}
+    Following the changed means, we again find the new clustering:
+    \begin{itemize}
+        \item $\mathcal{B}_1[1] = \{0, 0.5, 1\}$
+        \item $\mathcal{B}_2[1] = \{2\}$.
+    \end{itemize}
+    Since the cluster memberships have converged, we stop.
+
+    b) 
+    
+\end{document}
