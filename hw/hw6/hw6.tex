@@ -57,6 +57,39 @@
     \end{itemize}
     Since the cluster memberships have converged, we stop.
 
-    b) 
+    b) To find the condition on $\Delta$ to shift the convergence, we first 
+    consider the case where $\Delta<1$. The clustering at the first iteration 
+    will be identical to before. However, the new means would be as follows:
+    \begin{itemize}
+        \item $\mu_1[1] = \frac{0+0.5+0.5+\Delta}{3}=\frac{1}{3}+
+        \frac{\Delta}{3}$
+        \item $\mu_2[1] = \frac{3}{2}+\Delta$.
+    \end{itemize}
+    Here note that the distance from the closest point in $\mathcal{B}_1$ to 
+    the only point in $\mathcal{B}_2$ is equal to $||\frac{3}{2}+\Delta-\frac
+    {1}{2}-\Delta|| = 1$, which always is greater than the distance from
+    $\mu_1[1]$ to the point $\frac{1}{2}+\Delta$, i.e., $||\frac{1}{2}+\Delta
+    -\frac{1}{3}-\frac{\Delta}{3}|| = \frac{1}{6}+\frac{2\Delta}{3} < 1$ for 
+    $0 \leq \Delta <1$. Hence, this case can never yield a change in final 
+    clustering.
     
+    Therefore, we now consider the case where $\Delta = 1+\epsilon$, where
+    $\epsilon>1$ is a small constant. Then, the initial clustering will be:
+    \begin{itemize}
+        \item $\mathcal{B}_1[0] = \{0, 0.5\}$
+        \item $\mathcal{B}_1[0] = \{0.5+\Delta, 1.5+\Delta\}$.
+    \end{itemize}
+    The corresponding means would then become:
+    \begin{itemize}
+        \item $\mu_1[1] = \frac{0+0.5}{2} = 0.25$
+        \item $\mu_2[1] = \frac{0.5+\Delta+1.5+\Delta}{2} = 1+\Delta$.
+    \end{itemize}
+    Then notice that the distance from $\mu_1[1]$ to the closest point in 
+    $\mathcal{B}_1$ to $\mathcal{B}_2$ is equal to $||\frac{1}{2}+\Delta-
+    \frac{1}{4}|| = \frac{1}{4}+\Delta > \frac{5}{4}$, whereas the distance 
+    from $\mu_2[1]$ to the same point is $||1+\Delta - \frac{1}{2}-\Delta|| = 
+    \frac{1}{2}$, which is less than the former in this case and Hence
+    there would be no further updates the the clusters. Therefore, for this 
+    case, i.e., $\Delta>1$, we are able to find a change in clustering.
+
 \end{document}
