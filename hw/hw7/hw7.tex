@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[top=1.2in, textwidth=6.5in]{geometry}
+
+% set up margins
+\textheight=9in
+\parskip=.07in
+\parindent=0in
+\headheight=23pt
+\pagestyle{fancy}
+
+% set up header
+\newcommand{\setheader}[5]
+{
+	\lhead{{\sc #1}\\{\sc #2} ({\small \it #3})}
+	\rhead{{\bf #4}\\{#5}}
+}
+
+% set up some shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\begin{document}
+    \setheader{ECE421: Introduction to Machine Learning}
+    {Homework Assignment 7}{\today}{Pranshu Malik}{1004138916}
+
+    \textbf{Solution 1: Gaussian Mixture Models (Final Exam 2018, Problem 5)}
+
+    We are given a pre-trained Gaussian Mixture Model (GMM) for the marks of 
+    $K=2$ classes: undergraduate students $(w_1=\frac{2}{3}, \mu_1=70, 
+    \sigma_1^2=100)$ and graduate students $(w_2=\frac{1}{3}, \mu_2=80, 
+    \sigma_2^2=25)$.
+
+    a) Taking a random variable $X$, with the probability distribution 
+    defined by the GMM, the probability $P(X\geq80) = P(X\geq80\mid\text
+    {undergraduate})P(\text{undergraduate}) + P(X\geq80\mid\text{graduate})P
+    (\text{graduate})$ by the law of total probability. The weights of the 
+    GMM convey the share of total population for each class, and hence $P
+    (\text{undergraduate})=w_1$ and $P(\text{graduate})=w_2$. Further using 
+    the approximation $P(|X-\mu_X|\leq\sigma_X) = \frac{2}{3}$, we get $P
+    (X\geq80) = (\frac{1}{2}-\frac{2}{3}\frac{1}{2})\frac{2}{3} + \frac{1}{2}
+    \frac{1}{3} = \frac{5}{18}$.
+
+    b) The probability $P(\text{undergraduate}\mid X\geq80) = \frac{P(\text
+    {undergraduate}, X\geq80)}{P(X\geq80)} = \frac{P(X\geq80\mid\text
+    {undergraduate})P(\text{undergraduate})}{P(X\geq80)}$, using Bayes' 
+    theorem. Then, using the previous part, we get $P(\text{undergraduate}
+    \mid X\geq80) = \frac{(\frac{1}{2}-\frac{2}{3}\frac{1}{2})\frac{2}{3}}
+    {\frac{5}{18}} = \frac{2}{5}$.
+
+\end{document}
