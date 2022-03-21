@@ -39,13 +39,14 @@
     \sigma_1^2=100)$ and graduate students $(w_2=\frac{1}{3}, \mu_2=80, 
     \sigma_2^2=25)$.
 
-    a) Taking a random variable $X$, with the probability distribution 
+    a) Taking a random variable (RV) $X$, with the probability distribution 
     defined by the GMM, the probability $P(X\geq80) = P(X\geq80\mid\text
     {undergraduate})P(\text{undergraduate}) + P(X\geq80\mid\text{graduate})P
     (\text{graduate})$ by the law of total probability. The weights of the 
     GMM convey the share of total population for each class, and hence $P
-    (\text{undergraduate})=w_1$ and $P(\text{graduate})=w_2$. Further using 
-    the approximation $P(|X-\mu_X|\leq\sigma_X) = \frac{2}{3}$, we get $P
+    (\text{undergraduate})=w_1$ and $P(\text{graduate})=w_2$. Furthermore, 
+    for an RV $W\sim\mathcal{N}(\mu_W, \sigma_W^2)$ we can approximate the 
+    probability $P(|W-\mu_W|\leq\sigma_W)=\frac{2}{3}$, using which we get $P
     (X\geq80) = (\frac{1}{2}-\frac{2}{3}\frac{1}{2})\frac{2}{3} + \frac{1}{2}
     \frac{1}{3} = \frac{5}{18}$.
 
